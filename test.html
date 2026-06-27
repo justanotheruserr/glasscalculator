@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Premium Calculator</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    html,
+    body {
+      width: 100%;
+      min-height: 100%;
+    }
+
+    body {
+      min-height: 100vh;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #071f5f;
+      background: #f6fbff;
+    }
+
+    /* =========================
+       ANIMATED BACKGROUND
+    ========================= */
+
+    .animated-bg {
+      position: fixed;
+      inset: 0;
+      overflow: hidden;
+      z-index: 0;
+      background:
+        radial-gradient(circle at 12% 8%, rgba(235, 255, 203, 0.95), transparent 24%),
+        radial-gradient(circle at 25% 14%, rgba(105, 244, 255, 0.55), transparent 27%),
+        radial-gradient(circle at 82% 18%, rgba(92, 177, 255, 0.35), transparent 32%),
+        linear-gradient(120deg, #ffffff 0%, #effbff 38%, #dceeff 100%);
+    }
+
+    .animated-bg::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(120deg, rgba(255,255,255,0.92), rgba(255,255,255,0.18) 42%, rgba(183,230,255,0.2)),
+        radial-gradient(circle at 54% 38%, rgba(255,255,255,0.88), transparent 28%);
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .ray {
+      position: absolute;
+      top: -28%;
+      width: 110px;
+      height: 160%;
+      transform: rotate(17deg);
+      transform-origin: center;
+      z-index: 1;
+      animation: rayPop 5.2s ease-in-out infinite;
+      will-change: transform;
+    }
+
+    .ray i {
+      display: block;
+      width: 100%;
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(87, 167, 255, 0.08) 14%,
+        rgba(90, 186, 255, 0.22) 38%,
+        rgba(130, 253, 255, 0.34) 54%,
+        rgba(89, 153, 255, 0.18) 72%,
+        transparent 100%
+      );
+      filter: blur(0.4px);
+      animation: rayPulse 2.6s ease-in-out infinite;
+      will-change: opacity, filter, transform;
+    }
+
+    .ray:nth-child(1) {
+      left: -12%;
+      width: 95px;
+      animation-delay: 0s;
+    }
+
+    .ray:nth-child(1) i {
+      animation-delay: 0s;
+      opacity: 0.7;
+    }
+
+    .ray:nth-child(2) {
+      left: 2%;
+      width: 120px;
+      animation-delay: 0.18s;
+    }
+
+    .ray:nth-child(2) i {
+      animation-delay: 0.18s;
+      opacity: 0.85;
+    }
+
+    .ray:nth-child(3) {
+      left: 16%;
+      width: 88px;
+      animation-delay: 0.36s;
+    }
+
+    .ray:nth-child(3) i {
+      animation-delay: 0.36s;
+      opacity: 0.58;
+    }
+
+    .ray:nth-child(4) {
+      left: 28%;
+      width: 126px;
+      animation-delay: 0.54s;
+    }
+
+    .ray:nth-child(4) i {
+      animation-delay: 0.54s;
+      opacity: 0.52;
+    }
+
+    .ray:nth-child(5) {
+      left: 41%;
+      width: 92px;
+      animation-delay: 0.72s;
+    }
+
+    .ray:nth-child(5) i {
+      animation-delay: 0.72s;
+      opacity: 0.55;
+    }
+
+    .ray:nth-child(6) {
+      left: 53%;
+      width: 150px;
+      animation-delay: 0.9s;
+    }
+
+    .ray:nth-child(6) i {
+      animation-delay: 0.9s;
+      opacity: 0.48;
+    }
+
+    .ray:nth-child(7) {
+      left: 68%;
+      width: 110px;
+      animation-delay: 1.08s;
+    }
+
+    .ray:nth-child(7) i {
+      animation-delay: 1.08s;
+      opacity: 0.72;
+    }
+
+    .ray:nth-child(8) {
+      left: 79%;
+      width: 145px;
+      animation-delay: 1.26s;
+    }
+
+    .ray:nth-child(8) i {
+      animation-delay: 1.26s;
+      opacity: 0.9;
+    }
+
+    .ray:nth-child(9) {
+      left: 91%;
+      width: 105px;
+      animation-delay: 1.44s;
+    }
+
+    .ray:nth-child(9) i {
+      animation-delay: 1.44s;
+      opacity: 0.72;
+    }
+
+    .ray:nth-child(10) {
+      left: 102%;
+      width: 150px;
+      animation-delay: 1.62s;
+    }
+
+    .ray:nth-child(10) i {
+      animation-delay: 1.62s;
+      opacity: 0.76;
+    }
+
+    @keyframes rayPop {
+      0% {
+        transform: translateY(0) translateX(-10px) rotate(17deg) scaleY(1);
+      }
+
+      20% {
+        transform: translateY(-28px) translateX(7px) rotate(17deg) scaleY(1.025);
+      }
+
+      45% {
+        transform: translateY(26px) translateX(18px) rotate(17deg) scaleY(0.985);
+      }
+
+      70% {
+        transform: translateY(-16px) translateX(8px) rotate(17deg) scaleY(1.015);
+      }
+
+      100% {
+        transform: translateY(0) translateX(-10px) rotate(17deg) scaleY(1);
+      }
+    }
+
+    @keyframes rayPulse {
+      0% {
+        opacity: 0.38;
+        transform: scaleX(0.92);
+        filter: blur(1px);
+      }
+
+      45% {
+        opacity: 1;
+        transform: scaleX(1.16);
+        filter: blur(0px);
+      }
+
+      100% {
+        opacity: 0.38;
+        transform: scaleX(0.92);
+        filter: blur(1px);
+      }
+    }
+
+    .soft-noise {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      opacity: 0.09;
+      background-image:
+        radial-gradient(circle at 20% 20%, rgba(8, 67, 150, 0.25) 0 1px, transparent 1px),
+        radial-gradient(circle at 70% 50%, rgba(0, 190, 255, 0.22) 0 1px, transparent 1px);
+      background-size: 64px 64px, 88px 88px;
+      mix-blend-mode: multiply;
+    }
+
+    /* =========================
+       CALCULATOR
+    ========================= */
+
+    .calculator {
+      width: 390px;
+      padding: 26px;
+      border-radius: 32px;
+      position: relative;
+      z-index: 5;
+      background: rgba(255, 255, 255, 0.74);
+      border: 1px solid rgba(255, 255, 255, 0.85);
+      box-shadow:
+        0 34px 95px rgba(18, 71, 147, 0.24),
+        inset 0 1px 0 rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+    }
+
+    .top-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 22px;
+    }
+
+    .brand {
+      font-size: 20px;
+      font-weight: 850;
+      letter-spacing: -0.04em;
+      color: #06266f;
+      text-align: center;
+    }
+
+    .display {
+      width: 100%;
+      min-height: 96px;
+      padding: 22px;
+      border-radius: 24px;
+      border: 1px solid rgba(37, 99, 235, 0.13);
+      background: linear-gradient(180deg, rgba(255,255,255,0.94), rgba(244,248,255,0.88));
+      box-shadow: inset 0 1px 16px rgba(20, 55, 120, 0.06);
+      display: flex;
+      align-items: flex-end;
+      justify-content: flex-end;
+      font-size: 40px;
+      font-weight: 850;
+      letter-spacing: -0.06em;
+      overflow: hidden;
+      white-space: nowrap;
+      color: #061f62;
+    }
+
+    .hint {
+      margin: 14px 4px 18px;
+      font-size: 12px;
+      color: rgba(7, 31, 95, 0.56);
+      line-height: 1.4;
+      text-align: center;
+    }
+
+    .fake-note {
+      margin: -8px 4px 16px;
+      font-size: 12px;
+      color: #1f8f5f;
+      display: none;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .fake-note.show {
+      display: block;
+    }
+
+    .keys {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+
+    button {
+      border: none;
+      cursor: pointer;
+      font: inherit;
+    }
+
+    .key {
+      height: 62px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.78);
+      color: #09215f;
+      font-size: 20px;
+      font-weight: 850;
+      box-shadow:
+        0 10px 24px rgba(14, 67, 150, 0.09),
+        inset 0 1px 0 rgba(255,255,255,0.9);
+      border: 1px solid rgba(255,255,255,0.9);
+      transition: 0.18s ease;
+    }
+
+    .key:hover {
+      transform: translateY(-2px);
+      box-shadow:
+        0 16px 34px rgba(14, 67, 150, 0.14),
+        inset 0 1px 0 rgba(255,255,255,0.96);
+    }
+
+    .key:active {
+      transform: translateY(1px) scale(0.98);
+    }
+
+    .operator {
+      background: rgba(38, 109, 232, 0.1);
+      color: #2164d8;
+    }
+
+    .danger {
+      color: #ff4d6d;
+      background: rgba(255, 77, 109, 0.08);
+    }
+
+    .equals {
+      grid-column: span 2;
+      color: white;
+      background: linear-gradient(135deg, #2f7df4, #105edb);
+      box-shadow: 0 18px 38px rgba(37, 99, 235, 0.28);
+    }
+
+    .zero {
+      grid-column: span 2;
+    }
+
+    /* =========================
+       PAYMENT MODAL
+    ========================= */
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background: rgba(5, 20, 55, 0.42);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      z-index: 30;
+      padding: 20px;
+    }
+
+    .modal-backdrop.active {
+      display: flex;
+    }
+
+    .payment-modal {
+      width: 476px;
+      overflow: hidden;
+      background: #ffffff;
+      box-shadow: 0 42px 120px rgba(4, 28, 82, 0.38);
+      animation: modalPop 0.24s ease;
+      position: relative;
+    }
+
+    @keyframes modalPop {
+      from {
+        transform: scale(0.96) translateY(14px);
+        opacity: 0;
+      }
+
+      to {
+        transform: scale(1) translateY(0);
+        opacity: 1;
+      }
+    }
+
+    .payment-content {
+      padding: 30px 28px 54px;
+    }
+
+    .payment-title {
+      font-size: 17px;
+      font-weight: 850;
+      color: #06266f;
+      margin-bottom: 22px;
+    }
+
+    .blue-line {
+      width: 28px;
+      height: 5px;
+      background: #2f70e8;
+      margin-bottom: 36px;
+    }
+
+    .payment-row {
+      display: grid;
+      grid-template-columns: 145px 1fr;
+      align-items: center;
+      margin-bottom: 32px;
+      gap: 18px;
+    }
+
+    .payment-row label {
+      font-size: 14px;
+      color: #32406d;
+    }
+
+    .payment-row label span {
+      color: #ff4d4f;
+    }
+
+    .payment-row input {
+      height: 37px;
+      border: 1px solid #d8dfed;
+      outline: none;
+      padding: 0 12px;
+      font-size: 15px;
+      color: #06266f;
+      background: white;
+      transition: 0.15s ease;
+    }
+
+    .payment-row input:focus {
+      border-color: #2f70e8;
+      box-shadow: 0 0 0 3px rgba(47, 112, 232, 0.12);
+    }
+
+    .amount-box {
+      height: 37px;
+      border: 1px solid #d8dfed;
+      display: flex;
+      align-items: center;
+      padding: 0 12px;
+      color: #06266f;
+      font-weight: 850;
+      background: #fbfdff;
+    }
+
+    .phone-wrap {
+      display: grid;
+      grid-template-columns: 96px 1fr;
+    }
+
+    .country-code {
+      height: 37px;
+      border: 1px solid #d8dfed;
+      border-right: none;
+      display: flex;
+      align-items: center;
+      padding-left: 8px;
+      font-size: 14px;
+      color: #06266f;
+      background: #fbfdff;
+    }
+
+    .phone-wrap input {
+      border-left: 1px solid #d8dfed;
+    }
+
+    .payment-footer {
+      height: 56px;
+      display: grid;
+      grid-template-columns: 1fr 180px;
+      background: #f4f6f9;
+    }
+
+    .cards {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding-left: 28px;
+      color: #17316d;
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .card-badge {
+      padding: 4px 6px;
+      background: white;
+      border-radius: 4px;
+      border: 1px solid #dde4f0;
+      line-height: 1;
+      font-size: 10px;
+    }
+
+    .pay-btn {
+      background: #2f70e8;
+      color: white;
+      font-weight: 850;
+      font-size: 16px;
+      transition: 0.18s ease;
+    }
+
+    .pay-btn:disabled {
+      background: #9cb9ee;
+      cursor: not-allowed;
+    }
+
+    .pay-btn:not(:disabled):hover {
+      background: #1f62dc;
+    }
+
+    .close-modal {
+      position: fixed;
+      top: 22px;
+      right: 24px;
+      width: 38px;
+      height: 38px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.18);
+      color: white;
+      font-size: 24px;
+      z-index: 40;
+      transition: 0.18s ease;
+    }
+
+    .close-modal:hover {
+      background: rgba(255,255,255,0.28);
+      transform: rotate(90deg);
+    }
+
+    @media (max-width: 520px) {
+      body {
+        overflow: auto;
+        padding: 22px 0;
+      }
+
+      .calculator {
+        width: calc(100vw - 28px);
+        padding: 20px;
+      }
+
+      .payment-modal {
+        width: 100%;
+      }
+
+      .payment-row {
+        grid-template-columns: 1fr;
+        gap: 8px;
+        margin-bottom: 22px;
+      }
+
+      .payment-footer {
+        grid-template-columns: 1fr;
+        height: auto;
+      }
+
+      .cards {
+        height: 54px;
+        padding-left: 18px;
+      }
+
+      .pay-btn {
+        height: 58px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="animated-bg" aria-hidden="true">
+    <span class="ray"><i></i></span>
+    <span class="ray"><i></i></span>
+    <span class="ray"><i></i></span>
+    <span class="ray"><i></i></span>
+    <span class="ray"><i></i></span>
+    <span class="ray"><i></i></span>
+    <span class="ray"><i></i></span>
+    <span class="ray"><i></i></span>
+    <span class="ray"><i></i></span>
+    <span class="ray"><i></i></span>
+  </div>
+
+  <div class="soft-noise" aria-hidden="true"></div>
+
+  <main class="calculator">
+    <div class="top-row">
+      <div class="brand">Premium Calculator</div>
+    </div>
+
+    <div class="display" id="display">0</div>
+
+    <div class="hint">
+      Press = to unlock the highly advanced mathematical answer.
+    </div>
+
+    <div class="fake-note" id="fakeNote">
+      Payment verified. Calculation unlocked.
+    </div>
+
+    <div class="keys">
+      <button class="key danger" onclick="clearDisplay()">C</button>
+      <button class="key operator" onclick="backspace()">⌫</button>
+      <button class="key operator" onclick="press('%')">%</button>
+      <button class="key operator" onclick="press('/')">÷</button>
+
+      <button class="key" onclick="press('7')">7</button>
+      <button class="key" onclick="press('8')">8</button>
+      <button class="key" onclick="press('9')">9</button>
+      <button class="key operator" onclick="press('*')">×</button>
+
+      <button class="key" onclick="press('4')">4</button>
+      <button class="key" onclick="press('5')">5</button>
+      <button class="key" onclick="press('6')">6</button>
+      <button class="key operator" onclick="press('-')">−</button>
+
+      <button class="key" onclick="press('1')">1</button>
+      <button class="key" onclick="press('2')">2</button>
+      <button class="key" onclick="press('3')">3</button>
+      <button class="key operator" onclick="press('+')">+</button>
+
+      <button class="key zero" onclick="press('0')">0</button>
+      <button class="key" onclick="press('.')">.</button>
+      <button class="key equals" onclick="openPayment()">=</button>
+    </div>
+  </main>
+
+  <div class="modal-backdrop" id="modal">
+    <button class="close-modal" onclick="closePayment()">×</button>
+
+    <section class="payment-modal">
+      <div class="payment-content">
+        <h2 class="payment-title">Payment Details</h2>
+        <div class="blue-line"></div>
+
+        <div class="payment-row">
+          <label>Amount <span>*</span></label>
+          <div class="amount-box">$ 20.00</div>
+        </div>
+
+        <div class="payment-row">
+          <label for="email">Email <span>*</span></label>
+          <input id="email" type="email" autocomplete="off" />
+        </div>
+
+        <div class="payment-row">
+          <label for="phone">Phone <span>*</span></label>
+          <div class="phone-wrap">
+            <div class="country-code">US +1</div>
+            <input id="phone" type="tel" autocomplete="off" />
+          </div>
+        </div>
+      </div>
+
+      <div class="payment-footer">
+        <div class="cards">
+          <span>VISA</span>
+          <span class="card-badge">MC</span>
+          <span class="card-badge">AMEX</span>
+          <span class="card-badge">PCI</span>
+        </div>
+
+        <button class="pay-btn" id="payBtn" disabled onclick="completePayment()">
+          Pay&nbsp; $ 20.00
+        </button>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const display = document.getElementById("display");
+    const modal = document.getElementById("modal");
+    const email = document.getElementById("email");
+    const phone = document.getElementById("phone");
+    const payBtn = document.getElementById("payBtn");
+    const fakeNote = document.getElementById("fakeNote");
+
+    let expression = "";
+
+    function updateDisplay() {
+      display.textContent = expression || "0";
+    }
+
+    function press(value) {
+      fakeNote.classList.remove("show");
+
+      const operators = ["+", "-", "*", "/", "%"];
+      const last = expression.slice(-1);
+
+      if (operators.includes(value) && operators.includes(last)) {
+        expression = expression.slice(0, -1) + value;
+      } else {
+        expression += value;
+      }
+
+      updateDisplay();
+    }
+
+    function clearDisplay() {
+      expression = "";
+      fakeNote.classList.remove("show");
+      updateDisplay();
+    }
+
+    function backspace() {
+      expression = expression.slice(0, -1);
+      fakeNote.classList.remove("show");
+      updateDisplay();
+    }
+
+    function openPayment() {
+      if (!expression.trim()) return;
+
+      modal.classList.add("active");
+      setTimeout(() => email.focus(), 100);
+      validatePaymentFields();
+    }
+
+    function closePayment() {
+      modal.classList.remove("active");
+    }
+
+    function validatePaymentFields() {
+      const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim());
+      const phoneOk = phone.value.replace(/\D/g, "").length >= 7;
+
+      payBtn.disabled = !(emailOk && phoneOk);
+    }
+
+    email.addEventListener("input", validatePaymentFields);
+    phone.addEventListener("input", validatePaymentFields);
+
+    function completePayment() {
+      const fakeResult = expression
+        .replace(/[+\-*/%]/g, "")
+        .replace(/\s/g, "");
+
+      display.textContent = fakeResult || "0";
+      expression = fakeResult;
+
+      closePayment();
+      fakeNote.classList.add("show");
+
+      email.value = "";
+      phone.value = "";
+      validatePaymentFields();
+    }
+
+    document.addEventListener("keydown", function (e) {
+      const allowed = "0123456789+-*/%.";
+
+      if (allowed.includes(e.key)) {
+        press(e.key);
+      }
+
+      if (e.key === "Enter") {
+        openPayment();
+      }
+
+      if (e.key === "Backspace") {
+        backspace();
+      }
+
+      if (e.key === "Escape") {
+        closePayment();
+      }
+    });
+  </script>
+
+</body>
+</html>
